@@ -7,10 +7,23 @@ Repozitorij z gradivi pri predmetu APPR v študijskem letu 2018/19
 * [![Shiny](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/lanaherman/APPR-2018-19/master?urlpath=shiny/APPR-2018-19/projekt.Rmd) Shiny
 * [![RStudio](http://mybinder.org/badge.svg)](http://beta.mybinder.org/v2/gh/lanaherman/APPR-2018-19/master?urlpath=rstudio) RStudio
 
-## Tematika
+## Ekološko kmetovanje v Sloveniji
 
-Izbrali si boste temo, s katero se bo vaš projekt ukvarjal.
-Tukaj boste napisali, kje ste dobili podatke, ter kakšen je vaš cilj.
+Analizirala bom sektor kmetijstvo, kjer se bom osredotočila na ekološko usmerjene kmetije. Analizirala bom njihove pridelke, primerjala bom strukturo pridelkov ekoloških in neekoloških kmetij.
+
+# Tabele
+
+* Tabela 1: Število kmetijskih gospodarstev (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1556001S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/00_15560_splosno/&lang=2)
+* Tabela 2: Rastlinski pridelki (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1516501S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/01_15165_zemljisca/&lang=2)
+* Tabela 3: Število živine (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1516602S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/02_15166_zivinoreja/&lang=2)
+* Tabela 4: Število ekoloških kmetijskih gospodarstev (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561901S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
+* Tabela 5: Pridelava ekoloških rastlinskih pridelkov (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561905S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
+* Tabela 6: Število živali v ekološki reji (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561903S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
+* Tabela 7: Kmetijska gospodarstva - splošni pregled po statističnih regijah (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1573801S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/08_15738_kmet_gosp_stat_reg/&lang=2)
+
+# Viri
+
+* Tabela 1-6: https://pxweb.stat.si/pxweb/Database/Okolje/Okolje.asp#15
 
 ## Program
 
