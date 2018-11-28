@@ -23,7 +23,7 @@ Analizirala bom sektor kmetijstvo, kjer se bom osredotočila na ekološko usmerj
 
 ### Viri
 
-* Tabela 1-6: https://pxweb.stat.si/pxweb/Database/Okolje/Okolje.asp#15
+* Tabela 1-7: https://pxweb.stat.si/pxweb/Database/Okolje/Okolje.asp#15
 
 ## Program
 
