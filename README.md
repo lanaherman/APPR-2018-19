@@ -11,7 +11,7 @@ Repozitorij z gradivi pri predmetu APPR v študijskem letu 2018/19
 
 Analizirala bom sektor kmetijstvo, kjer se bom osredotočila na ekološko usmerjene kmetije. Analizirala bom njihove pridelke, primerjala bom strukturo pridelkov ekoloških in neekoloških kmetij.
 
-# Tabele
+### Tabele
 
 * Tabela 1: Število kmetijskih gospodarstev (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1556001S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/00_15560_splosno/&lang=2)
 * Tabela 2: Rastlinski pridelki (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1516501S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/01_15165_zemljisca/&lang=2)
@@ -21,7 +21,7 @@ Analizirala bom sektor kmetijstvo, kjer se bom osredotočila na ekološko usmerj
 * Tabela 6: Število živali v ekološki reji (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561903S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
 * Tabela 7: Kmetijska gospodarstva - splošni pregled po statističnih regijah (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1573801S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/08_15738_kmet_gosp_stat_reg/&lang=2)
 
-# Viri
+### Viri
 
 * Tabela 1-6: https://pxweb.stat.si/pxweb/Database/Okolje/Okolje.asp#15
 
