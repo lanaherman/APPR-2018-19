@@ -13,23 +13,21 @@ Analizirala bom sektor kmetijstvo, kjer se bom osredotočila na ekološko usmerj
 
 ### Tabele
 
-* Tabela 1: Število kmetijskih gospodarstev - KMETIJSKA PODJETJA, DRUŽINSKE KMETIJE, LETO
+* Tabela 1: Kmetijska gospodarstva - KMETIJSKA PODJETJA, DRUŽINSKE KMETIJE, NAMEN KMETIJSKE PRIDELAVE DRUŽINSKIH KMETIJ, EKOLOŠKO USMERJENE KMETIJE, LETO
 * Tabela 2: Rastlinski pridelki - VRSTE PRIDELKOV, ŠTEVILO KMETIJSKIH GOSPODARSTEV, LETO
 * Tabela 3: Število živine - VRSTA ŽIVINE, ŠTEVILO KMETIJSKIH GOSPODARSTEV, LETO
-* Tabela 4: Število ekoloških kmetijskih gospodarstev - EKOLOŠKA KMETIJSKA GOSPODARSTVA, KMETIJSKA GOSPODARSTVA V PREUSMERITVI, LETO
-* Tabela 5: Pridelava ekoloških rastlinskih pridelkov - SKUPINE KMETIJSKIH KULTUR , LETO
-* Tabela 6: Število živali v ekološki reji - VRSTE ŽIVALI , LETO
-* Tabela 7: Kmetijska gospodarstva - splošni pregled po statističnih regijah - LETO, STATISTIČNA REGIJA
+* Tabela 4: Pridelava ekoloških rastlinskih pridelkov - SKUPINE KMETIJSKIH KULTUR , LETO
+* Tabela 5: Število živali v ekološki reji - VRSTE ŽIVALI , LETO
+* Tabela 6: Kmetijska gospodarstva - splošni pregled po statističnih regijah - LETO, STATISTIČNA REGIJA
 
 ### Viri
 
 * Tabela 1: (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1556001S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/00_15560_splosno/&lang=2)
 * Tabela 2: (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1516501S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/01_15165_zemljisca/&lang=2)
 * Tabela 3: (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1516602S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/02_15166_zivinoreja/&lang=2)
-* Tabela 4: (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561901S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
-* Tabela 5: (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561905S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
-* Tabela 6: (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561903S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
-* Tabela 7:  (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1573801S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/08_15738_kmet_gosp_stat_reg/&lang=2)
+* Tabela 4: (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561905S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
+* Tabela 5: (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1561903S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/11_15619_ekolosko_kmet/&lang=2)
+* Tabela 6:  (https://pxweb.stat.si/pxweb/Dialog/varval.asp?ma=1573801S&ti=&path=../Database/Okolje/15_kmetijstvo_ribistvo/03_kmetijska_gospod/08_15738_kmet_gosp_stat_reg/&lang=2)
 
 ## Program
 
