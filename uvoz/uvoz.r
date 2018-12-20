@@ -63,16 +63,21 @@ library(maptools)
 library(reshape2)
 
 Tabela1 <- read.csv2("podatki/Kmetijska gospodarstva.csv", na=c("", " ", "..."))
-colnames(Tabela1)=c("Tip kmetije", "2000", "2003", "2005", "2007", "2010", "2013", "2016")
-Tabela1 <- Tabela1 %>% melt(id.vars="Tip kmetije", variable.name="leto", value.name="stevilo")
-Tabela2 <- read.csv2("podatki/Rastlinski pridelki.csv") %>% 
-  melt(id.vars="Tabela2", variable.name="leto")
-Tabela3 <- read.csv2("podatki/Stevilo zivine.csv") %>% 
-  melt(id.vars="Tabela3", variable.name="leto")
-Tabela4 <- read.csv2("podatki/Pridelava ekoloskih rastlinskih pridelkov.csv") %>% 
-  melt(id.vars="Tabela4", variable.name="leto")
-Tabela5 <- read.csv2("podatki/Stevilo zivali v ekoloski reji.csv") %>% 
-  melt(id.vars="Tabela5", variable.name="leto", value.name="stevilo")
-Tabela6 <- read.csv2("podatki/Kmetijska gospodarstva - splosni pregled po statisticnih regijah.csv") %>% 
-  melt(id.vars="Tabela6", variable.name="leto", value.name="stevilo")
-#Tabela6 <- Tabela6[1:13,]
+colnames(Tabela1)=c("Kmetijska gospodarstva", "2000", "2003", "2005", "2007", "2010", "2013", "2016")
+Tabela1 <- Tabela1 %>% melt(id.vars="Kmetijska gospodarstva", variable.name="leto", value.name="stevilo")
+Tabela2 <- read.csv2("podatki/Rastlinski pridelki.csv", na=c("", " ", "..."))
+colnames(Tabela2)=c("Rastilnski pridelki", "2000", "2003", "2005", "2007", "2010", "2013", "2016")
+Tabela2 <- Tabela2 %>% melt(id.vars="Rastilnski pridelki", variable.name="leto", value.name="stevilo")
+Tabela3 <- read.csv2("podatki/Stevilo zivine.csv", na=c("", " ", "..."))
+colnames(Tabela3)=c("Zivina", "2000", "2003", "2005", "2007", "2010", "2013", "2016")
+Tabela3 <- Tabela3 %>% melt(id.vars="Zivina", variable.name="leto", value.name="stevilo")
+Tabela4 <- read.csv2("podatki/Pridelava ekoloskih rastlinskih pridelkov.csv", na=c("", " ", "...", "-"))
+colnames(Tabela4)=c("Ekoloski rastlinski pridelki", "2012", "2013", "2014", "2015", "2016", "2017")
+Tabela4 <- Tabela4 %>% melt(id.vars="Ekoloski rastlinski pridelki", variable.name="leto", value.name="stevilo")
+Tabela5 <- read.csv2("podatki/Stevilo zivali v ekoloski reji.csv", na=c("", " ", "...", "-"))
+colnames(Tabela5)=c("Zivina v ekoloski reji", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017")
+Tabela5 <- Tabela5 %>% melt(id.vars="Zivina v ekoloski reji", variable.name="leto", value.name="stevilo")
+Tabela6 <- read.csv2("podatki/Kmetijska gospodarstva - splosni pregled po statisticnih regijah.csv", na=c("", " ", "..."))
+colnames(Tabela6)=c("Kmetijska gospodarstva po statisticnih regijah", "2003", "2005", "2007", "2010", "2013", "2016")
+Tabela6 <- Tabela6[1:13,]
+Tabela6 <- Tabela6 %>% melt(id.vars="Kmetijska gospodarstva po statisticnih regijah", variable.name="leto", value.name="stevilo kmetijskih gospodarstev")
