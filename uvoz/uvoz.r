@@ -55,10 +55,24 @@ druzine <- uvozi.druzine(levels(obcine$obcina))
 
 
 
+library(dplyr)
+library(rgdal)
+library(rgeos)
+library(mosaic)
+library(maptools)
+library(reshape2)
 
-Tabela1 <- read.csv2("podatki/Kmetijska gospodarstva.csv")
-Tabela2 <- read.csv2("podatki/Rastlinski pridelki.csv")
-Tabela3 <- read.csv2("podatki/Stevilo zivine.csv")
-Tabela4 <- read.csv2("podatki/Pridelava ekoloskih rastlinskih pridelkov.csv")
-Tabela5 <- read.csv2("podatki/Stevilo zivali v ekoloski reji.csv")
-Tabela6 <- read.csv2("podatki/Kmetijska gospodarstva - splosni pregled po statisticnih regijah.csv")
+Tabela1 <- read.csv2("podatki/Kmetijska gospodarstva.csv", na=c("", " ", "..."))
+colnames(Tabela1)=c("Tip kmetije", "2000", "2003", "2005", "2007", "2010", "2013", "2016")
+Tabela1 <- Tabela1 %>% melt(id.vars="Tip kmetije", variable.name="leto", value.name="stevilo")
+Tabela2 <- read.csv2("podatki/Rastlinski pridelki.csv") %>% 
+  melt(id.vars="Tabela2", variable.name="leto")
+Tabela3 <- read.csv2("podatki/Stevilo zivine.csv") %>% 
+  melt(id.vars="Tabela3", variable.name="leto")
+Tabela4 <- read.csv2("podatki/Pridelava ekoloskih rastlinskih pridelkov.csv") %>% 
+  melt(id.vars="Tabela4", variable.name="leto")
+Tabela5 <- read.csv2("podatki/Stevilo zivali v ekoloski reji.csv") %>% 
+  melt(id.vars="Tabela5", variable.name="leto", value.name="stevilo")
+Tabela6 <- read.csv2("podatki/Kmetijska gospodarstva - splosni pregled po statisticnih regijah.csv") %>% 
+  melt(id.vars="Tabela6", variable.name="leto", value.name="stevilo")
+#Tabela6 <- Tabela6[1:13,]
