@@ -91,6 +91,30 @@ Tabela5$`Zivina v ekoloski reji` <- gsub("ostalo (divjad)", "jelenjad", Tabela5$
 
 Tabela6 <- read.csv2("podatki/Kmetijska gospodarstva - splosni pregled po statisticnih regijah.csv", na=c("", " ", "..."))
 colnames(Tabela6)=c("Kmetijska gospodarstva po statisticnih regijah", "2003", "2005", "2007", "2010", "2013", "2016")
-Tabela6 <- Tabela6[1:13,]
+Tabela6 <- Tabela6[2:13,]
 Tabela6 <- Tabela6 %>% melt(id.vars="Kmetijska gospodarstva po statisticnih regijah", variable.name="leto", value.name="stevilo kmetijskih gospodarstev")
+
+source("https://raw.githubusercontent.com/jaanos/APPR-2018-19/master/lib/uvozi.zemljevid.r")
+
+
+kraji <- read.csv2("uvoz/SVN_adm2.csv", na=c("", " ", "..."), sep=",",encoding="UTF-8")
+
+a <- kraji %>% select("NAME_1", "NAME_2")
+colnames(a) <- c("Kmetijska gospodarstva po statisticnih regijah", "OB_IME")
+b <- Tabela6[Tabela6$leto==2010, ]
+
+#x <- merge(x = a, y = b, by = "Kmetijska gospodarstva po statisticnih regijah", all.x = TRUE)
+
+total <- merge(a,b,by=c("Kmetijska gospodarstva po statisticnih regijah")) #Dobiš imena običn pod imenom regij
+total$"OB_IME" <- toupper(total$"OB_IME")
+
+total2 <- merge(obcine,total,by=c("OB_IME")) #Dobiš koordinate od vseh obćin ter podatke za mapo
+
+obcine <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
+                          pot.zemljevida="OB", encoding="Windows-1250") %>% fortify()
+
+ggplot() + geom_polygon(data=total2, aes(x=long, y=lat, group=group, fill="stevilo kmetijskih gospodarstev")) +
+  guides(fill=FALSE)
+
+
 
