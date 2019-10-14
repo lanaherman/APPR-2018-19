@@ -1,4 +1,5 @@
 # 2. faza: Uvoz podatkov
+library(rvest)
 
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 
@@ -13,14 +14,28 @@ uvozi.obcine <- function() {
       Encoding(tabela[[i]]) <- "UTF-8"
     }
   }
+  
+  
   colnames(tabela) <- c("obcina", "povrsina", "prebivalci", "gostota", "naselja",
                         "ustanovitev", "pokrajina", "regija", "odcepitev")
   tabela$obcina <- gsub("Slovenskih", "Slov.", tabela$obcina)
   tabela$obcina[tabela$obcina == "Kanal ob Soči"] <- "Kanal"
   tabela$obcina[tabela$obcina == "Loški potok"] <- "Loški Potok"
+  
+  tabela$regija[tabela$regija == "Spodnjeposavska"] <- "Posavska"
+  tabela$regija[tabela$regija == "Notranjsko-kraška"] <- "Primorsko-notranjska"
+  tabela$regija[tabela$regija == "Jugovzhodna"] <- "Jugovzhodna Slovenija"
+  
+  
   for (col in c("povrsina", "prebivalci", "gostota", "naselja", "ustanovitev")) {
-    tabela[[col]] <- parse_number(tabela[[col]], na="-", locale=sl)
+    #(tabela[[col]] != "-")
+    #  tabela[[col]] <- 0
+    #else 
+    #  tabela[[col]] <- parse_number(tabela[[col]], na=c("", "NA", "-"), locale=sl, trim_ws = TRUE) */
+    
   }
+  
+  
   for (col in c("obcina", "pokrajina", "regija")) {
     tabela[[col]] <- factor(tabela[[col]])
   }
@@ -43,6 +58,8 @@ uvozi.druzine <- function(obcine) {
 
 # Zapišimo podatke v razpredelnico obcine
 obcine <- uvozi.obcine()
+
+obcine2 <- uvozi.obcine()
 
 # Zapišimo podatke v razpredelnico druzine.
 druzine <- uvozi.druzine(levels(obcine$obcina))
@@ -97,24 +114,42 @@ Tabela6 <- Tabela6 %>% melt(id.vars="Kmetijska gospodarstva po statisticnih regi
 source("https://raw.githubusercontent.com/jaanos/APPR-2018-19/master/lib/uvozi.zemljevid.r")
 
 
-kraji <- read.csv2("uvoz/SVN_adm2.csv", na=c("", " ", "..."), sep=",",encoding="UTF-8")
+#kraji <- read.csv2("uvoz/SVN_adm2a.csv", na=c("", " ", "..."), sep=",",encoding="UTF-8")
+obcine <- uvozi.obcine()
 
-a <- kraji %>% select("NAME_1", "NAME_2")
-colnames(a) <- c("Kmetijska gospodarstva po statisticnih regijah", "OB_IME")
+
 b <- Tabela6[Tabela6$leto==2010, ]
+colnames(b) <- c("regija", "leto", "stevilo")
 
-#x <- merge(x = a, y = b, by = "Kmetijska gospodarstva po statisticnih regijah", all.x = TRUE)
+total <- merge(b, obcine,by=c("regija")) #Dobiš imena običn pod imenom regij
+total$"obcina" <- toupper(total$"obcina")
+names(total)[names(total) == "obcina"] <- "OB_IME"
 
-total <- merge(a,b,by=c("Kmetijska gospodarstva po statisticnih regijah")) #Dobiš imena običn pod imenom regij
-total$"OB_IME" <- toupper(total$"OB_IME")
-
-total2 <- merge(obcine,total,by=c("OB_IME")) #Dobiš koordinate od vseh obćin ter podatke za mapo
-
-obcine <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
+zemljevid <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
                           pot.zemljevida="OB", encoding="Windows-1250") %>% fortify()
 
-ggplot() + geom_polygon(data=total2, aes(x=long, y=lat, group=group, fill="stevilo kmetijskih gospodarstev")) +
-  guides(fill=FALSE)
+total$OB_IME <- gsub(" ", "", total$"OB_IME", fixed = TRUE)
+zemljevid$OB_IME <- gsub(" ", "", zemljevid$"OB_IME", fixed = TRUE)
+
+#distinct_df <- zemljevid %>% distinct(OB_IME)
+#distinct_df <- sort(distinct_df$OB_IME)
+#h <- sort(distinct_df)
+#distinct_df2 <- total %>% distinct(OB_IME)
+#distinct_df2 <- sort(distinct_df2$OB_IME)
+#g <- melt(data.frame(distinct_df,distinct_df2))
+#X <- g[order(g$OB_IME, g$OB_IME1),]
+
+#setdiff(distinct_df, distinct_df2)
+
+#test <- merge(distinct_df, total,by=c("OB_IME")) #Dobiš imena običn pod imenom regij
 
 
+data <- merge(total, zemljevid,by=c("OB_IME")) #Dobiš koordinate od vseh obćin ter podatke za mapo
+names(data)[names(data) == "stevilo"] <- "stevilo kmetijskih gospodarstev"
 
+#ggplot() + geom_polygon(data=data, aes(x=long, y=lat, group=group, fill="id")) +
+#  guides(fill=FALSE)
+
+p <- ggplot(data=data, aes(x=long, y=lat)) +
+  geom_polygon(aes(fill = `stevilo kmetijskih gospodarstev`, group = OB_IME))
+p
