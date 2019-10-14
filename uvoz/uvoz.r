@@ -130,26 +130,26 @@ zemljevid <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
 
 total$OB_IME <- gsub(" ", "", total$"OB_IME", fixed = TRUE)
 zemljevid$OB_IME <- gsub(" ", "", zemljevid$"OB_IME", fixed = TRUE)
-
-#distinct_df <- zemljevid %>% distinct(OB_IME)
-#distinct_df <- sort(distinct_df$OB_IME)
-#h <- sort(distinct_df)
-#distinct_df2 <- total %>% distinct(OB_IME)
-#distinct_df2 <- sort(distinct_df2$OB_IME)
-#g <- melt(data.frame(distinct_df,distinct_df2))
-#X <- g[order(g$OB_IME, g$OB_IME1),]
-
-#setdiff(distinct_df, distinct_df2)
-
-#test <- merge(distinct_df, total,by=c("OB_IME")) #Dobiš imena običn pod imenom regij
-
+zemljevid$OB_IME[zemljevid$OB_IME == "SVETIANDRAŽVSLOV.GORICAH"] <- "SV.TROJICAVSLOV.GORICAH"
+zemljevid$OB_IME[zemljevid$OB_IME == "SVETIJURIJVSLOV.GORICAH"] <- "SV.TROJICAVSLOV.GORICAH"
 
 data <- merge(total, zemljevid,by=c("OB_IME")) #Dobiš koordinate od vseh obćin ter podatke za mapo
 names(data)[names(data) == "stevilo"] <- "stevilo kmetijskih gospodarstev"
 
+# distinct_df <- zemljevid %>% distinct(OB_IME)
+# distinct_df <- sort(distinct_df$OB_IME)
+# #h <- sort(distinct_df)
+# distinct_df2 <- total %>% distinct(OB_IME)
+# distinct_df2 <- sort(distinct_df2$OB_IME)
+# g <- melt(data.frame(distinct_df,distinct_df2))
+# X <- g[order(g$OB_IME, g$OB_IME1),]
+# setdiff(distinct_df, distinct_df2)
+# test <- merge(distinct_df, total,by=c("OB_IME")) #Dobiš imena običn pod imenom regij
+
+
 #ggplot() + geom_polygon(data=data, aes(x=long, y=lat, group=group, fill="id")) +
 #  guides(fill=FALSE)
 
-p <- ggplot(data=data, aes(x=long, y=lat)) +
-  geom_polygon(aes(fill = `stevilo kmetijskih gospodarstev`, group = OB_IME))
-p
+ p <- ggplot(data=data, aes(x=long, y=lat)) +
+   geom_polygon(aes(fill = `stevilo kmetijskih gospodarstev`, group = OB_IME))
+ p
