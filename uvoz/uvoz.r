@@ -87,26 +87,26 @@ library(munsell)
 
 Tabela1 <- read.csv2("podatki/Kmetijska gospodarstva.csv", na=c("", " ", "..."))
 colnames(Tabela1)=c("Kmetijska gospodarstva", "2000", "2003", "2005", "2007", "2010", "2013", "2016")
-Tabela1 <- Tabela1 %>% melt(id.vars="Kmetijska gospodarstva", variable.name="leto", value.name="stevilo")
+Tabela1 <- Tabela1 %>% reshape2::melt(id.vars="Kmetijska gospodarstva", variable.name="leto", value.name="stevilo")
 
 Tabela2 <- read.csv2("podatki/Rastlinski pridelki.csv", na=c("", " ", "..."))
 colnames(Tabela2)=c("Rastilnski pridelki", "2000", "2003", "2005", "2007", "2010", "2013", "2016")
-Tabela2 <- Tabela2 %>% melt(id.vars="Rastilnski pridelki", variable.name="leto", value.name="stevilo")
+Tabela2 <- Tabela2 %>% reshape2::melt(id.vars="Rastilnski pridelki", variable.name="leto", value.name="stevilo")
 
 Tabela3 <- read.csv2("podatki/Stevilo zivine.csv", na=c("", " ", "..."))
 colnames(Tabela3)=c("Zivina", "2000", "2003", "2005", "2007", "2010", "2013", "2016")
-Tabela3 <- Tabela3 %>% melt(id.vars="Zivina", variable.name="leto", value.name="stevilo")
+Tabela3 <- Tabela3 %>% reshape2::melt(id.vars="Zivina", variable.name="leto", value.name="stevilo")
 Tabela3$Zivina <- gsub(" - SKUPAJ", "", Tabela3$Zivina)
 Tabela3$Zivina <- tolower(Tabela3$Zivina)
 
 Tabela4 <- read.csv2("podatki/Pridelava ekoloskih rastlinskih pridelkov.csv", na=c("", " ", "...", "-"), dec = ".")
 colnames(Tabela4)=c("Ekoloski rastlinski pridelki", "2012", "2013", "2014", "2015", "2016", "2017")
-Tabela4 <- Tabela4 %>% melt(id.vars="Ekoloski rastlinski pridelki", variable.name="leto", value.name="stevilo")
+Tabela4 <- Tabela4 %>% reshape2::melt(id.vars="Ekoloski rastlinski pridelki", variable.name="leto", value.name="stevilo")
 Tabela4$stevilo <- round(Tabela4$stevilo)
 
 Tabela5 <- read.csv2("podatki/Stevilo zivali v ekoloski reji.csv", na=c("", " ", "...", "-"))
 colnames(Tabela5)=c("Zivina v ekoloski reji", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017")
-Tabela5 <- Tabela5 %>% melt(id.vars="Zivina v ekoloski reji", variable.name="leto", value.name="stevilo")
+Tabela5 <- Tabela5 %>% reshape2::melt(id.vars="Zivina v ekoloski reji", variable.name="leto", value.name="stevilo")
 Tabela5$`Zivina v ekoloski reji` <- tolower(Tabela5$`Zivina v ekoloski reji`)
 Tabela5 <- filter(Tabela5, `Zivina v ekoloski reji` != "čebele (število panjev)")
 Tabela5$`Zivina v ekoloski reji` <- gsub("ostalo (divjad)", "jelenjad", Tabela5$`Zivina v ekoloski reji`)
@@ -114,7 +114,8 @@ Tabela5$`Zivina v ekoloski reji` <- gsub("ostalo (divjad)", "jelenjad", Tabela5$
 Tabela6 <- read.csv2("podatki/Kmetijska gospodarstva - splosni pregled po statisticnih regijah.csv", na=c("", " ", "..."))
 colnames(Tabela6)=c("Kmetijska gospodarstva po statisticnih regijah", "2003", "2005", "2007", "2010", "2013", "2016")
 Tabela6 <- Tabela6[2:13,]
-Tabela6 <- Tabela6 %>% melt(id.vars="Kmetijska gospodarstva po statisticnih regijah", variable.name="leto", value.name="stevilo kmetijskih gospodarstev")
+Tabela6 <- Tabela6 %>% reshape2::melt(id.vars="Kmetijska gospodarstva po statisticnih regijah", variable.name="leto", value.name="stevilo kmetijskih gospodarstev")
+
 
 ########################## ZEMLJEVID ############################################################
 source("https://raw.githubusercontent.com/jaanos/APPR-2018-19/master/lib/uvozi.zemljevid.r")
@@ -193,7 +194,9 @@ graf_rast + labs(title="Histogram rastlinskih pridelkov",
 ####################### ČRTNI GRAFIKON KMETIJSKIH GOSPODARSTEV ###############################
 Tabela2[is.na(Tabela2)] <- 0
 rast_ne_eko <- aggregate(Tabela2$stevilo, by=list(Tabela2$leto), FUN=sum)
-rast_ne_eko$pridelek="Rastlinski pridelki"
+rast_ne_eko$pridelek="Rastlinski pridelki (* 100 kg)"
+rast_ne_eko$x <- rast_ne_eko$x * 10
+
 Tabela3[is.na(Tabela3)] <- 0
 ziv_ne_eko <- aggregate(Tabela3$stevilo, by=list(Tabela3$leto), FUN=sum)
 ziv_ne_eko$pridelek="Zivina"
@@ -202,43 +205,122 @@ data_ne_eko <- merge(rast_ne_eko, ziv_ne_eko, all=TRUE)
 colnames(data_ne_eko)=c("leto", "stevilo", "pridelek")
 data_ne_eko$leto <- as.numeric(as.character(data_ne_eko$leto))
 
+require(scales)
+
 graf_prid <- ggplot(data = data_ne_eko, aes(x=leto, y=stevilo, col=pridelek)) +
   #geom_point() + 
   geom_line(size=1.5) +
-  scale_color_manual("Vrsta pridelka", values=c("Rastlinski pridelki" = "green4", "Zivina" = "hotpink4"))
-graf_prid + labs(x = "Leto", y = "Stevilo", title = "Crtni grafikon kmetijskih pridelkov")
+  scale_color_manual("Vrsta pridelka", values=c("Rastlinski pridelki (* 100 kg)" = "green4", "Zivina" = "hotpink4"))
+graf_prid + labs(x = "Leto", y = "Stevilo", title = "Primerjava stevila zivine in rastlinskih pridelkov") +
+  scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE))
 
-#tukaj napiši, da je v sloveniji veliko več kmetij z živini. razlaga je tukaj
+#tukaj napiši, da je v sloveniji veliko več kmetij z živino. razlaga je tukaj
 #https://www.stat.si/statweb/News/Index/6742
 
 ##############################################################################################
 
-############# ALI JE VEDNO VEČ EKOLOŠKIH? #####################
+############################# ALI JE VEDNO VEČ EKOLOŠKIH? ####################################
 library(plyr)
 library(dplyr)
+library(data.table)
 
 tab <- Tabela1[Tabela1$`Kmetijska gospodarstva` %in% c("Kmetijska gospodarstva", "Kmetijska gospodarstva z ekološkim kmetovanjem", "Kmetijska gospodarstva v postopku preusmeritve v ekološko kmetovanje"), ]
 tab$`Kmetijska gospodarstva`[tab$`Kmetijska gospodarstva` == "Kmetijska gospodarstva v postopku preusmeritve v ekološko kmetovanje"] <- "Kmetijska gospodarstva z ekološkim kmetovanjem"
 tab[is.na(tab)] <- 0
-#m <- cbind(t(apply(tab[1:2], 1, sort)), tab[,3])
-#aggregate(m[,3], by = list(m[,1],m[,2]),FUN=sum)
-#tab_new = tab %>% group_by(`Kmetijska gospodarstva`) %>% summarise(tab$`Kmetijska gospodarstva` = sum(stevilo))
+
+DT <- data.table(tab)
+dt <- DT[, sum(stevilo), by = c("Kmetijska gospodarstva", "leto")]
+colnames(dt)=c("Kmetijska gospodarstva", "leto", "stevilo")
+
+
+for (row in 1:nrow(dt)) {
+  leto_x <- dt[row, "leto"]
+  tip  <- dt[row, "Kmetijska gospodarstva"]
+  stevilo <- dt[row, "stevilo"]
+  
+  if(tip == "Kmetijska gospodarstva"){
+  
+   stevilo_eko <- (dt[as.numeric(dt$leto) == as.numeric(leto_x) & dt$`Kmetijska gospodarstva` == "Kmetijska gospodarstva z ekološkim kmetovanjem", "stevilo"])
+   print(stevilo)
+   print(stevilo_eko)
+   dt[row, "stevilo"] <- stevilo - stevilo_eko
+   
+   }  
+
+}
+ggplot(data=dt, aes(x=leto, y=`Kmetijska gospodarstva`, size=stevilo)) + geom_point() +
+  theme(panel.background = element_rect(fill = 'wheat1', colour = "black"))
 ##############################################################################################
 
-library(ggplot2movies)
-require(ggplot2movies)
+################# HISTOGRAM PRIMERJAVA VRSTE ZIVINE V EKO IN NE EKO ##########################
+library(ggplot2)
+library(scales)
 
-head(movies)
+Tabela5$`Zivina v ekoloski reji`[Tabela5$`Zivina v ekoloski reji` == "kopitarji"] <- "konji"
+Tabela5$`Zivina v ekoloski reji`[Tabela5$`Zivina v ekoloski reji` == "ostalo (divjad)"] <- "jelenjad"
+colnames(Tabela5) = c("Zivina", "leto", "stevilo")
 
-tipi = names(movies)[18:23]
-seznam = list()
-for (i in 1:length(tipi)) {
-  tip = tipi[[i]]
-  seznam[[i]] <- movies %>% 
-    filter_(paste(tip, "==", 1)) %>% 
-    select(Budget=budget, Short, Year=year) %>%
-    mutate(Type=tip)
-}
-myMovies <- do.call(rbind, seznam)
+p <- Tabela5[Tabela5$leto %in% c(2016), ]
+p$vrsta = "Ekoloske zivali"
+p$leto <- NULL
+p$vrsta <- NULL
+p <- p %>% mutate(label1 = paste0(round(stevilo / sum(stevilo) * 100, 1)))
 
-ggplot(data=myMovies, aes(x=Year, y=Type, size=Budget)) + geom_point()
+r <- Tabela3[Tabela3$leto %in% c(2016), ]
+r$vrsta = "Neekoloske zivali"
+r$leto <- NULL
+r$vrsta <- NULL
+r$Zivina[r$Zivina == "perutina"] <- "perutnina"
+r <- r %>% mutate(label1 = paste0(round(stevilo / sum(stevilo) * 100, 1)))
+
+bp <- ggplot(p, aes(x="", y=stevilo, fill=Zivina)) + geom_bar(width = 1, stat = "identity", color = "black")
+tortni_eko_ziv <- bp + coord_polar("y", start=0) + scale_fill_brewer("Vrsta zivine", palette="Dark2") +
+  theme_void() +
+  geom_text(aes(label = paste0(round(as.numeric(label1)), "%")), position = position_stack(vjust = 0.5)) +
+  labs(x = NULL, y = NULL, fill = NULL, title = "Struktura zivine")
+tortni_eko_ziv
+
+
+br <- ggplot(r, aes(x="", y=stevilo, fill=Zivina)) + geom_bar(width = 1, stat = "identity", color = "black")
+tortni_ne_eko_ziv <- br + coord_polar("y", start=0) + scale_fill_brewer("Vrsta zivine", palette="Dark2") +
+  theme_void() +
+  geom_text(aes(label = paste0(round(as.numeric(label1)), "%")), position = position_stack(vjust = 0.5)) +
+  labs(x = NULL, y = NULL, fill = NULL, title = "Struktura ekoloske zivine")
+tortni_ne_eko_ziv
+
+#data_zivali <- merge(p, r, all=TRUE)
+#data_zivali <- data_zivali[-c(13, 14),]
+
+#graf_rast <- ggplot(data = data_zivali, aes(x=Zivina, y=stevilo, fill=vrsta)) +
+  #geom_bar(stat="identity", position="dodge") +
+  #scale_fill_manual("Legenda", values = c("Ekoloske zivali" = "orange4", "Neekoloske zivali" = "green4"))
+#graf_rast + labs(title="Histogram zivine", 
+                 #x="Zivina", y = "Stevilo")
+#https://stackoverflow.com/questions/9531904/plot-multiple-columns-on-the-same-graph-in-r
+############################################################################################
+
+############################# KORELACIJA KOKOŠI-CENA JAJC ######################################
+cene <- read.csv2("podatki/cene.csv", na=c("", " ", "...", "-"), header = T, check.names=FALSE)
+cene <- cene[-1,]
+cene <- cene %>% reshape2::melt(id.vars="IZDELEK", variable.name="leto", value.name="povprecna cena")
+cene <- cene[cene$leto %in% c(2000, 2003, 2005, 2007, 2010, 2013, 2016), ]
+cene$IZDELEK <- gsub('(\\D*)(\\s\\(.*$)', '\\1',as.character(cene$IZDELEK))
+
+cene_jajca <- cene[cene$IZDELEK %in% "Jajca, konzumna", ]
+colnames(cene_jajca) = c("izdelek", "leto", "stevilo")
+cene_jajca$stevilo <- as.numeric(gsub(",", ".", gsub("\\.", "", cene_jajca$stevilo)))
+cene_jajca$stevilo <- cene_jajca$stevilo * 50000000
+
+st_kokosi <- Tabela3[Tabela3$Zivina %in% "perutina", ]
+colnames(st_kokosi) = c("izdelek", "leto", "stevilo")
+
+primerjava_kokosi_cene_jajc <- merge(st_kokosi, cene_jajca, all=TRUE)
+primerjava_kokosi_cene_jajc <- primerjava_kokosi_cene_jajc[order(primerjava_kokosi_cene_jajc$leto),]
+
+graf_kok <- ggplot(data = primerjava_kokosi_cene_jajc, aes(x=leto, y=stevilo, col=izdelek, group = izdelek)) +
+  geom_line(size=1.2) +
+  scale_color_manual("Legenda", values=c("Jajca, konzumna" = "khaki2", "perutina" = "palevioletred1"))
+
+graf_kok + labs(x = "Leto", y = "Stevilo", title = "Korelacija kokosi - cena jajc") +
+  theme(panel.background = element_rect(fill = 'white', colour = "black"))
+############################################################################################
