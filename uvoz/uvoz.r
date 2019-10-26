@@ -280,13 +280,38 @@ tortni_eko_ziv <- bp + coord_polar("y", start=0) + scale_fill_brewer("Vrsta zivi
   labs(x = NULL, y = NULL, fill = NULL, title = "Struktura zivine")
 tortni_eko_ziv
 
-
+# GRDO IZPISE
 br <- ggplot(r, aes(x="", y=stevilo, fill=Zivina)) + geom_bar(width = 1, stat = "identity", color = "black")
 tortni_ne_eko_ziv <- br + coord_polar("y", start=0) + scale_fill_brewer("Vrsta zivine", palette="Dark2") +
   theme_void() +
   geom_text(aes(label = paste0(round(as.numeric(label1)), "%")), position = position_stack(vjust = 0.5)) +
-  labs(x = NULL, y = NULL, fill = NULL, title = "Struktura ekoloske zivine")
+  labs(x = NULL, y = NULL, fill = NULL, title = "Struktura ekoloske zivine") 
 tortni_ne_eko_ziv
+
+# NEUSPELI POIZKUS
+r <- Tabela3[Tabela3$leto %in% c(2016), ]
+r$vrsta = "Neekoloske zivali"
+r$leto <- NULL
+r$vrsta <- NULL
+r$Zivina[r$Zivina == "perutina"] <- "perutnina"
+r <- r %>% mutate(label1 = paste0(round(stevilo / sum(stevilo) * 100, 1)))
+r <- r %>%
+  mutate(end = 2 * pi * cumsum(stevilo)/sum(stevilo),
+         start = lag(end, default = 0),
+         middle = 0.5 * (start + end),
+         hjust = ifelse(middle > pi, 1, 0),
+         vjust = ifelse(middle < pi/2 | middle > 3 * pi/2, 0, 1))
+library(ggforce) # for 'geom_arc_bar'
+ggplot(r) +
+  geom_arc_bar(aes(x0 = 0, y0 = 0, r0 = 0, r = 1,
+                   start = start, end = end, fill = Zivina)) +
+  geom_text(aes(x = 1.05 * sin(middle), y = 1.05 * cos(middle), label = label1,
+                hjust = hjust, vjust = vjust)) +
+  coord_fixed() +
+  scale_x_continuous(limits = c(-1.5, 1.4),  # Adjust so labels are not cut off
+                     name = "", breaks = NULL, labels = NULL) +
+  scale_y_continuous(limits = c(-1, 1),      # Adjust so labels are not cut off
+                     name = "", breaks = NULL, labels = NULL)
 
 #data_zivali <- merge(p, r, all=TRUE)
 #data_zivali <- data_zivali[-c(13, 14),]
