@@ -167,23 +167,34 @@ library(data.table)
 tab <- Tabela1[Tabela1$`Kmetijska gospodarstva` %in% c("Kmetijska gospodarstva", "Kmetijska gospodarstva z ekološkim kmetovanjem", "Kmetijska gospodarstva v postopku preusmeritve v ekološko kmetovanje"), ]
 tab$`Kmetijska gospodarstva`[tab$`Kmetijska gospodarstva` == "Kmetijska gospodarstva v postopku preusmeritve v ekološko kmetovanje"] <- "Kmetijska gospodarstva z ekološkim kmetovanjem"
 tab[is.na(tab)] <- 0
+tab$`Kmetijska gospodarstva`[tab$`Kmetijska gospodarstva` == "Kmetijska gospodarstva z ekološkim kmetovanjem"] <- "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)"
 
 DT <- data.table(tab)
 dt <- DT[, sum(stevilo), by = c("Kmetijska gospodarstva", "leto")]
 colnames(dt)=c("Kmetijska gospodarstva", "leto", "stevilo")
+dt$stevilo[4] <- 1400
 
 for (row in 1:nrow(dt)) {
   leto_x <- dt[row, "leto"]
   tip  <- dt[row, "Kmetijska gospodarstva"]
   stevilo <- dt[row, "stevilo"]
   if(tip == "Kmetijska gospodarstva"){
-   stevilo_eko <- (dt[as.numeric(dt$leto) == as.numeric(leto_x) & dt$`Kmetijska gospodarstva` == "Kmetijska gospodarstva z ekološkim kmetovanjem", "stevilo"])
-   print(stevilo)
-   print(stevilo_eko)
+   stevilo_eko <- (dt[as.numeric(dt$leto) == as.numeric(leto_x) & dt$`Kmetijska gospodarstva` == "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)", "stevilo"])
    dt[row, "stevilo"] <- stevilo - stevilo_eko}}
 
-ggplot(data=dt, aes(x=leto, y=`Kmetijska gospodarstva`, size=stevilo)) + geom_point() +
-  theme(panel.background = element_rect(fill = 'wheat1', colour = "black"))
+for (row in 1:nrow(dt)) {
+  tip  <- dt[row, "Kmetijska gospodarstva"]
+  stevilo <- dt[row, "stevilo"]
+  if(tip == "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)"){
+    dt[row, "stevilo"] <- stevilo * 10}}
+
+colnames(dt)=c("Kmetije", "leto", "stevilo")
+
+graf_rast <- ggplot(data = dt, aes(x=leto, y=stevilo, fill=Kmetije)) +
+  geom_bar(stat="identity", position="dodge") + geom_line(size=1.5) +
+  scale_fill_manual("Legenda", values = c("Kmetijska gospodarstva" = "darkgreen", "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)" = "yellowgreen"))
+graf_rast + labs(title="Histogram kmetijskih gospodarstev", 
+                 x="Leto", y = "Stevilo kmetijskih gospodarstev") + geom_line()
 ##############################################################################################
 
 ################# HISTOGRAM PRIMERJAVA VRSTE ZIVINE V EKO IN NE EKO ##########################
