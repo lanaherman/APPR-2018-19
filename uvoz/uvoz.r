@@ -191,10 +191,10 @@ for (row in 1:nrow(dt)) {
 colnames(dt)=c("Kmetije", "leto", "stevilo")
 
 graf_rast <- ggplot(data = dt, aes(x=leto, y=stevilo, fill=Kmetije)) +
-  geom_bar(stat="identity", position="dodge") + geom_line(size=1.5) +
+  geom_bar(stat="identity", position="dodge") +
   scale_fill_manual("Legenda", values = c("Kmetijska gospodarstva" = "darkgreen", "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)" = "yellowgreen"))
 graf_rast + labs(title="Histogram kmetijskih gospodarstev", 
-                 x="Leto", y = "Stevilo kmetijskih gospodarstev") + geom_line()
+                 x="Leto", y = "Stevilo kmetijskih gospodarstev")
 ##############################################################################################
 
 ################# HISTOGRAM PRIMERJAVA VRSTE ZIVINE V EKO IN NE EKO ##########################
