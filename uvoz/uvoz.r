@@ -54,3 +54,10 @@ Tabela6 <- read_delim("podatki/Kmetijska gospodarstva - splosni pregled po stati
 colnames(Tabela6)=c("Kmetijska gospodarstva po statisticnih regijah", "2003", "2005", "2007", "2010", "2013", "2016")
 Tabela6 <- Tabela6[2:13,]
 Tabela6 <- Tabela6 %>% reshape2::melt(id.vars="Kmetijska gospodarstva po statisticnih regijah", variable.name="leto", value.name="stevilo kmetijskih gospodarstev")
+
+Tabela7 <- read.csv2("podatki/cene.csv", na=c("", " ", "...", "-"), header = T, check.names=FALSE)
+Tabela7 <- Tabela7[-1,]
+Tabela7 <- Tabela7 %>% reshape2::melt(id.vars="IZDELEK", variable.name="leto", value.name="povprecna cena")
+Tabela7 <- Tabela7[Tabela7$leto %in% c(2000, 2003, 2005, 2007, 2010, 2013, 2016), ]
+Tabela7$IZDELEK <- gsub('(\\D*)(\\s\\(.*$)', '\\1',as.character(Tabela7$IZDELEK))
+colnames(Tabela7)=c("Izdelek", "leto", "povprecna cena")
