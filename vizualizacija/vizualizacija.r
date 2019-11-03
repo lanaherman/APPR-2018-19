@@ -81,8 +81,9 @@ graf_rast
 ##############################################################################################
 
 ####################### ČRTNI GRAFIKON KMETIJSKIH GOSPODARSTEV ###############################
-Tabela2[is.na(Tabela2)] <- 0
-rast_ne_eko <- aggregate(Tabela2$stevilo, by=list(Tabela2$leto), FUN=sum)
+kk <- Tabela2
+kk[is.na(kk)] <- 0
+rast_ne_eko <- aggregate(kk$stevilo, by=list(kk$leto), FUN=sum)
 rast_ne_eko$pridelek="Rastlinski pridelki (* 100 kg)"
 rast_ne_eko$x <- rast_ne_eko$x * 10
 
@@ -102,8 +103,6 @@ graf_prid <- ggplot(data = data_ne_eko, aes(x=leto, y=stevilo, col=pridelek)) +
 graf_prid <- graf_prid + labs(x = "Leto", y = "Stevilo", title = "Primerjava stevila zivine in rastlinskih pridelkov") +
   scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE))
 graf_prid
-#tukaj napiši, da je v sloveniji veliko več kmetij z živino. razlaga je tukaj
-#https://www.stat.si/statweb/News/Index/6742
 ##############################################################################################
 
 ############################# ALI JE VEDNO VEČ EKOLOŠKIH? ####################################
@@ -137,12 +136,12 @@ for (row in 1:nrow(dt)) {
 
 colnames(dt)=c("Kmetije", "leto", "stevilo")
 
-graf_rast <- ggplot(data = dt, aes(x=leto, y=stevilo, fill=Kmetije)) +
+graf_rast_eko <- ggplot(data = dt, aes(x=leto, y=stevilo, fill=Kmetije)) +
   geom_bar(stat="identity", position="dodge") +
   scale_fill_manual("Legenda", values = c("Kmetijska gospodarstva" = "darkgreen", "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)" = "yellowgreen"))
-graf_rast <- graf_rast + labs(title="Histogram kmetijskih gospodarstev", 
+graf_rast_eko <- graf_rast_eko + labs(title="Histogram kmetijskih gospodarstev", 
                               x="Leto", y = "Stevilo kmetijskih gospodarstev")
-graf_rast
+graf_rast_eko
 ##############################################################################################
 
 ################# HISTOGRAM PRIMERJAVA VRSTE ZIVINE V EKO IN NE EKO ##########################
@@ -191,13 +190,7 @@ tortni_ne_eko_ziv
 ############################################################################################
 
 ############################# KORELACIJA KOKOŠI-CENA JAJC ######################################
-cene <- read.csv2("podatki/cene.csv", na=c("", " ", "...", "-"), header = T, check.names=FALSE)
-cene <- cene[-1,]
-cene <- cene %>% reshape2::melt(id.vars="IZDELEK", variable.name="leto", value.name="povprecna cena")
-cene <- cene[cene$leto %in% c(2000, 2003, 2005, 2007, 2010, 2013, 2016), ]
-cene$IZDELEK <- gsub('(\\D*)(\\s\\(.*$)', '\\1',as.character(cene$IZDELEK))
-
-cene_jajca <- cene[cene$IZDELEK %in% "Jajca, konzumna", ]
+cene_jajca <- Tabela7[Tabela7$Izdelek %in% "Jajca, konzumna", ]
 colnames(cene_jajca) = c("izdelek", "leto", "stevilo")
 cene_jajca$stevilo <- as.numeric(gsub(",", ".", gsub("\\.", "", cene_jajca$stevilo)))
 cene_jajca$stevilo <- cene_jajca$stevilo * 50000000
