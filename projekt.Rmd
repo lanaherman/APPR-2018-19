@@ -164,7 +164,7 @@ kable(head(Tabela7), align="l")
 ***
 # Analiza in vizualizacija podatkov
 
-```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE}
+```{r vizualizacija, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 source("vizualizacija/vizualizacija.r", encoding = "UTF-8")
 ```
 Najprej bom prikazala zemljevid Slovenije, ki prikazuje na katerih območjih je največ kmetijskih gospodarstev.
@@ -212,4 +212,5 @@ Kot vidimo iz grafa imata krivulji od leta 2005 dalje podobno obliko, torej na i
 
 &nbsp;
 &nbsp;
+
 ***
