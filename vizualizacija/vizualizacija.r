@@ -192,7 +192,8 @@ tortni_ne_eko_ziv
 ############################# KORELACIJA KOKOŠI-CENA JAJC ######################################
 cene_jajca <- Tabela7[Tabela7$Izdelek %in% "Jajca, konzumna", ]
 colnames(cene_jajca) = c("izdelek", "leto", "stevilo")
-cene_jajca$stevilo <- as.numeric(gsub(",", ".", gsub("\\.", "", cene_jajca$stevilo)))
+cene_jajca$stevilo <- as.numeric(cene_jajca$stevilo)
+#cene_jajca$stevilo <- as.numeric(gsub(",", ".", gsub("\\.", "", cene_jajca$stevilo)))
 cene_jajca$stevilo <- cene_jajca$stevilo * 50000000
 
 st_kokosi <- Tabela3[Tabela3$Zivina %in% "perutina", ]
