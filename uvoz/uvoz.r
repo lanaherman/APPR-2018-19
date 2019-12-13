@@ -35,7 +35,7 @@ Tabela3$Zivina <- tolower(Tabela3$Zivina)
 
 Tabela4 <- read_delim("podatki/Pridelava ekoloskih rastlinskih pridelkov.csv", delim=";",
                       na=c("", " ", "...", "-"),
-                      locale=locale(encoding="Windows-1250", decimal_mark="."))
+                      locale=locale(encoding="Windows-1250", decimal_mark="."), skip=1)
 colnames(Tabela4)=c("Ekoloski rastlinski pridelki", "2012", "2013", "2014", "2015", "2016", "2017")
 Tabela4 <- Tabela4 %>% reshape2::melt(id.vars="Ekoloski rastlinski pridelki", variable.name="leto", value.name="stevilo")
 
@@ -55,7 +55,9 @@ colnames(Tabela6)=c("Kmetijska gospodarstva po statisticnih regijah", "2003", "2
 Tabela6 <- Tabela6[2:13,]
 Tabela6 <- Tabela6 %>% reshape2::melt(id.vars="Kmetijska gospodarstva po statisticnih regijah", variable.name="leto", value.name="stevilo kmetijskih gospodarstev")
 
-Tabela7 <- read.csv2("podatki/cene.csv", na=c("", " ", "...", "-"), header = T, check.names=FALSE)
+Tabela7 <- read_csv2("podatki/cene.csv", na=c("", " ", "...", "-"), skip=1,
+                     locale=locale(encoding="Windows-1250"))
+colnames(Tabela7) <- c("IZDELEK", 2000:2018)
 Tabela7 <- Tabela7[-1,]
 Tabela7 <- Tabela7 %>% reshape2::melt(id.vars="IZDELEK", variable.name="leto", value.name="povprecna cena")
 Tabela7 <- Tabela7[Tabela7$leto %in% c(2000, 2003, 2005, 2007, 2010, 2013, 2016), ]
