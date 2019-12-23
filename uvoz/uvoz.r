@@ -13,6 +13,22 @@ library(ggmap)
 library(munsell)
 library(digest)
 
+Tabela_svet <- read_delim("podatki/FAOSTAT_data.csv", na=c("", " ", "...", "-"), 
+                          delim=",",
+                          locale=locale(encoding="Windows-1250"))
+Tabela_svet <- Tabela_svet[, -c(1:3)]
+Tabela_svet <- Tabela_svet[, -c(2:6)]
+Tabela_svet <- Tabela_svet[, -c(5:6)]
+Tabela_svet$Unit <- NULL
+Tabela_svet$Area[Tabela_svet$Area == "World"] <- "Svet"
+Tabela_svet$Area[Tabela_svet$Area == "Africa"] <- "Afrika"
+Tabela_svet$Area[Tabela_svet$Area == "Americas"] <- "Amerika"
+Tabela_svet$Area[Tabela_svet$Area == "Asia"] <- "Azija"
+Tabela_svet$Area[Tabela_svet$Area == "Europe"] <- "Evropa"
+Tabela_svet$Area[Tabela_svet$Area == "Oceania"] <- "Oceanija"
+
+#value prikazuje kolikšen delež posameznega območja predstavljajo organični pridelki
+
 Tabela1 <- read_delim("podatki/Kmetijska gospodarstva.csv", delim=";",
                       na=c("", " ", "...", "-"),
                       locale=locale(encoding="Windows-1250", decimal_mark="."))
