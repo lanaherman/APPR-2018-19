@@ -35,8 +35,14 @@ total <- merge(b, obcine,by=c("regija")) #Dobiš imena običn pod imenom regij
 total$"obcina" <- toupper(total$"obcina")
 names(total)[names(total) == "obcina"] <- "OB_IME"
 
-zemljevid <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", "OB",
-                             pot.zemljevida="OB", encoding="Windows-1250") %>% fortify()
+zemljevid <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", ime.zemljevida = "OB",
+                            pot.zemljevida="OB", encoding="Windows-1250") %>% fortify()
+
+# zemljevid <- uvozi.zemljevid(url = "https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_SVN_shp.zip",
+#                              #ime.zemljevida = "gadm36_SVN_1",
+#                              "gadm36_SVN_1",
+#                              encoding="UTF-8") %>% fortify()
+
 
 total$OB_IME <- gsub(" ", "", total$"OB_IME", fixed = TRUE)
 zemljevid$OB_IME <- gsub(" ", "", zemljevid$"OB_IME", fixed = TRUE)
@@ -48,11 +54,11 @@ names(data)[names(data) == "stevilo"] <- "stevilo kmetijskih gospodarstev"
 
 zemljevid_slovenije <- ggplot() + geom_polygon(data=left_join(zemljevid, total, by=c("OB_IME"="OB_IME")),
                                                aes(x=long, y=lat, group=group, fill=stevilo))
-zemljevid_slovenije <- zemljevid_slovenije + labs(fill = "stevilo kmetijskih gospodarstev v letu 2010")
+zemljevid_slovenije <- zemljevid_slovenije + labs(fill = "Število kmetijskih gospodarstev v letu 2010")
 zemljevid_slovenije
 ###############################################################################################
 
-########## HISTOGRAM RASTLINSKIH PRIDELKOV ####################################################
+########## STOLPIČNI GRAF RASTLINSKIH PRIDELKOV ####################################################
 c <- Tabela2[Tabela2$leto %in% c(2013, 2016), ]
 c[is.na(c)] <- 0
 d <- Tabela4[Tabela4$leto %in% c(2013, 2016), ]
@@ -75,7 +81,7 @@ nov_data_rastline <- rbind(data_rastline, nov_data)
 graf_rast <- ggplot(data = nov_data_rastline, aes(x=leto, y=stevilo, fill=vrsta)) +
   geom_bar(stat="identity", position="dodge") +
   scale_fill_manual("Legenda", values = c("Ekoloski rastlinski pridelki" = "orange4", "Rastlinski pridelki" = "green4", "Razmerje (* 100000)" = "gray13"))
-graf_rast <- graf_rast + labs(title="Histogram rastlinskih pridelkov", 
+graf_rast <- graf_rast + labs(title="Stolpični graf rastlinskih pridelkov", 
                               x="Leto", y = "Stevilo rastlinskih pridelkov (vsota)")
 graf_rast
 ##############################################################################################
@@ -89,7 +95,7 @@ rast_ne_eko$x <- rast_ne_eko$x * 10
 
 Tabela3[is.na(Tabela3)] <- 0
 ziv_ne_eko <- aggregate(Tabela3$stevilo, by=list(Tabela3$leto), FUN=sum)
-ziv_ne_eko$pridelek="Zivina"
+ziv_ne_eko$pridelek="Živina"
 
 data_ne_eko <- merge(rast_ne_eko, ziv_ne_eko, all=TRUE)
 colnames(data_ne_eko)=c("leto", "stevilo", "pridelek")
@@ -99,49 +105,10 @@ require(scales)
 
 graf_prid <- ggplot(data = data_ne_eko, aes(x=leto, y=stevilo, col=pridelek)) +
   geom_line(size=1.5) +
-  scale_color_manual("Vrsta pridelka", values=c("Rastlinski pridelki (* 100 kg)" = "green4", "Zivina" = "hotpink4"))
+  scale_color_manual("Vrsta pridelka", values=c("Rastlinski pridelki (* 100 kg)" = "green4", "Živina" = "hotpink4"))
 graf_prid <- graf_prid + labs(x = "Leto", y = "Stevilo", title = "Primerjava stevila zivine in rastlinskih pridelkov") +
   scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE))
 graf_prid
-##############################################################################################
-
-############################# ALI JE VEDNO VEČ EKOLOŠKIH? ####################################
-library(plyr)
-library(dplyr)
-library(data.table)
-
-tab <- Tabela1[Tabela1$`Kmetijska gospodarstva` %in% c("Kmetijska gospodarstva", "Kmetijska gospodarstva z ekološkim kmetovanjem", "Kmetijska gospodarstva v postopku preusmeritve v ekološko kmetovanje"), ]
-tab$`Kmetijska gospodarstva`[tab$`Kmetijska gospodarstva` == "Kmetijska gospodarstva v postopku preusmeritve v ekološko kmetovanje"] <- "Kmetijska gospodarstva z ekološkim kmetovanjem"
-tab[is.na(tab)] <- 0
-tab$`Kmetijska gospodarstva`[tab$`Kmetijska gospodarstva` == "Kmetijska gospodarstva z ekološkim kmetovanjem"] <- "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)"
-
-DT <- data.table(tab)
-dt <- DT[, sum(stevilo), by = c("Kmetijska gospodarstva", "leto")]
-colnames(dt)=c("Kmetijska gospodarstva", "leto", "stevilo")
-dt$stevilo[4] <- 1400
-
-for (row in 1:nrow(dt)) {
-  leto_x <- dt[row, "leto"]
-  tip  <- dt[row, "Kmetijska gospodarstva"]
-  stevilo <- dt[row, "stevilo"]
-  if(tip == "Kmetijska gospodarstva"){
-    stevilo_eko <- (dt[as.numeric(dt$leto) == as.numeric(leto_x) & dt$`Kmetijska gospodarstva` == "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)", "stevilo"])
-    dt[row, "stevilo"] <- stevilo - stevilo_eko}}
-
-for (row in 1:nrow(dt)) {
-  tip  <- dt[row, "Kmetijska gospodarstva"]
-  stevilo <- dt[row, "stevilo"]
-  if(tip == "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)"){
-    dt[row, "stevilo"] <- stevilo * 10}}
-
-colnames(dt)=c("Kmetije", "leto", "stevilo")
-
-graf_rast_eko <- ggplot(data = dt, aes(x=leto, y=stevilo, fill=Kmetije)) +
-  geom_bar(stat="identity", position="dodge") +
-  scale_fill_manual("Legenda", values = c("Kmetijska gospodarstva" = "darkgreen", "Kmetijska gospodarstva z ekoloskim kmetovanjem (* 10)" = "yellowgreen"))
-graf_rast_eko <- graf_rast_eko + labs(title="Histogram kmetijskih gospodarstev", 
-                              x="Leto", y = "Stevilo kmetijskih gospodarstev")
-graf_rast_eko
 ##############################################################################################
 
 ################# HISTOGRAM PRIMERJAVA VRSTE ZIVINE V EKO IN NE EKO ##########################
@@ -167,10 +134,10 @@ r$Zivina[r$Zivina == "perutina"] <- "perutnina"
 r <- r %>% mutate(label1 = paste0(round(stevilo / sum(stevilo) * 100, 1)))
 
 bp <- ggplot(p, aes(x="", y=stevilo, fill=Zivina)) + geom_bar(width = 1, stat = "identity", color = "black")
-tortni_eko_ziv <- bp + coord_polar("y", start=0) + scale_fill_brewer("Vrsta zivine", palette="Dark2") +
+tortni_eko_ziv <- bp + coord_polar("y", start=0) + scale_fill_brewer("Vrsta živine", palette="Dark2") +
   theme_void() +
   geom_text(aes(label = paste0(round(as.numeric(label1)), "%")), position = position_stack(vjust = 0.5)) +
-  labs(x = NULL, y = NULL, fill = NULL, title = "Struktura zivine")
+  labs(x = NULL, y = NULL, fill = NULL, title = "Struktura živine")
 tortni_eko_ziv
 
 br <- ggplot(r %>% arrange(desc(Zivina)) %>%
@@ -182,10 +149,10 @@ br <- ggplot(r %>% arrange(desc(Zivina)) %>%
   geom_arc_bar(aes(x0=0, y0=0, r0=0, r=1,
                    start=start_angle, end=end_angle, fill=Zivina))
 tortni_ne_eko_ziv <- br + coord_fixed() +
-  scale_fill_brewer("Vrsta zivine", palette="Dark2") + theme_void() +
+  scale_fill_brewer("Vrsta živine", palette="Dark2") + theme_void() +
   geom_text(aes(label=label1 %>% as.numeric() %>% round() %>% ifelse(paste0(., "%"), ""),
                 x=1.03*sin(mid_angle), y=1.03*cos(mid_angle), hjust=hjust, vjust=vjust)) +
-  labs(x=NULL, y=NULL, fill=NULL, title="Struktura ekoloske zivine")
+  labs(x=NULL, y=NULL, fill=NULL, title="Struktura ekološke živine")
 tortni_ne_eko_ziv
 ############################################################################################
 
@@ -194,7 +161,7 @@ cene_jajca <- Tabela7[Tabela7$Izdelek %in% "Jajca, konzumna", ]
 colnames(cene_jajca) = c("izdelek", "leto", "stevilo")
 cene_jajca$stevilo <- as.numeric(cene_jajca$stevilo)
 #cene_jajca$stevilo <- as.numeric(gsub(",", ".", gsub("\\.", "", cene_jajca$stevilo)))
-cene_jajca$stevilo <- cene_jajca$stevilo * 50000000
+cene_jajca$stevilo <- cene_jajca$stevilo
 
 st_kokosi <- Tabela3[Tabela3$Zivina %in% "perutina", ]
 st_kokosi$Zivina[st_kokosi$Zivina == "perutina"] <- "Perutnina"
@@ -205,10 +172,9 @@ primerjava_kokosi_cene_jajc <- primerjava_kokosi_cene_jajc[order(primerjava_koko
 
 graf_kok <- ggplot(data = primerjava_kokosi_cene_jajc, aes(x=leto, y=stevilo, col=izdelek, group = izdelek)) +
   geom_line(size=1.2) +
-  scale_color_manual("Legenda", values=c("Jajca, konzumna" = "khaki2", "Perutnina" = "palevioletred1"))
-
-graf_kok <- graf_kok + labs(x = "Leto", y = "Stevilo", title = "Korelacija kokosi in cene jajc") +
+  labs(x = "Leto", y = "Število", title = "Gibanje števila kokoši in cene jajc skozi leta") +
   theme(panel.background = element_rect(fill = 'white', colour = "black")) +
-  scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE))
-graf_kok
+  scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)) +
+  facet_grid(izdelek~., scales="free_y")
+graf_kok + theme(legend.position = "none")
 ############################################################################################
