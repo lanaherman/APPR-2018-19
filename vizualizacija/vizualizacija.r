@@ -176,5 +176,6 @@ graf_kok <- ggplot(data = primerjava_kokosi_cene_jajc, aes(x=leto, y=stevilo, co
   theme(panel.background = element_rect(fill = 'white', colour = "black")) +
   scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE)) +
   facet_grid(izdelek~., scales="free_y")
-graf_kok + theme(legend.position = "none")
+graf_kok <- graf_kok + theme(legend.position = "none")
+graf_kok
 ############################################################################################
