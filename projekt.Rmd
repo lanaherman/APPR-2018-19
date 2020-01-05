@@ -57,10 +57,10 @@ Analizirala bom sektor kmetijstvo, kjer se bom osredotočila na ekološko usmerj
 </center>
 
 Prvo področje bo na splošno kmetijstvo. Najprej se bom osredotočila na to, katare regije v Sloveniji imajo največ kmetijskih gospodarstev.
-Nato si bom ogledala kakšno razmerje živali-rastline je na slovenskih ketijah. Podrebneje bom analizirala strukturo živine. Primerjala bom strukturo živine iz ekološke reje in običajne reje.
+Nato si bom ogledala kakšno razmerje živali-rastline je na slovenskih kmetijah. Podrobneje bom analizirala strukturo živine. Primerjala bom strukturo živine iz ekološke reje in običajne reje.
 Ogledala si bom, če je zmeraj več kmetij z ekološkim kmetovanjem v Sloveniji in po svetu. To bi se zdelo logično, že zaradi dejstva, da je v trgovinah vedno več ekoloških izdelkov, torej je vedno več povpraševanja za takšne izdelke.
 
-**Cilj**: Predvidevam, da se število gospodarstev z ekološkim kmetovanjem skozi leta veča. Predvidevam tudi, da je struktura živine običajne reje različna od tiste iz ekološke reje, saj se večino ekoloških izdelkov povezanih z živino prodaja v obliki jajc in nekoliko manj mleka. Zato mislim, da bo velika večina živine iz ekološke reje perutnine. \
+**Cilj**: Predvidevam, da se število gospodarstev z ekološkim kmetovanjem skozi leta veča. Predvidevam tudi, da je struktura živine običajne reje različna od tiste iz ekološke reje, saj se večino ekoloških izdelkov povezanih z živino prodaja v obliki jajc in mleka. Zato mislim, da bo velika večina živine iz ekološke reje, perutnina. \
 Predvidevam, da bo s pomočjo grafa, ki prikazuje gibanje števila kokoši in cene jajc razvidno, da sta spremenljivki obratno sorazmerni, saj bi moral veljati zakon večja ponudba, manjše cene.
 
 &nbsp;
@@ -74,7 +74,7 @@ Predvidevam, da bo s pomočjo grafa, ki prikazuje gibanje števila kokoši in ce
 source("uvoz/uvoz.r", encoding="UTF-8")
 ```
 
-Podatke o kmetijskih gospodarstvih v Sloveniji sem uvozila Eurostata v obliki csv. Podatke sem preoblikovala v obliko *tidy data*.
+Podatke o kmetijskih gospodarstvih v Sloveniji sem uvozila iz Eurostata, o kmetijskih gospodartvih po svetu pa iz Faostata, oboje v obliki csv. Podatke sem preoblikovala v obliko *tidy data*.
 
 &nbsp;
 &nbsp;
@@ -208,7 +208,7 @@ print(tortni_eko_ziv)
 print(tortni_ne_eko_ziv)
 ```
 
-Takoj je razvidno, da je struktura popolnoma drugačna. Pri živalih iz ekološke reje perutnina predstavlja kar 85%, medtem ko pri običajni reji le 54%. Torej se grafi usklajeni z mojim predvidevanjem.
+Takoj je razvidno, da je struktura popolnoma drugačna. Pri živalih iz ekološke reje perutnina predstavlja kar 85%, medtem ko pri običajni reji le 54%. Torej se grafi usklajeni z mojimi predvidevanji.
 
 Kot zanimivost si lahko pogledamo še, ali lahko opazimo kakšno povezavo med številom kokoši in cene jajc na podlagi gibanja skozi leta.
 
@@ -216,7 +216,7 @@ Kot zanimivost si lahko pogledamo še, ali lahko opazimo kakšno povezavo med š
 print(graf_kok)
 ```
 
-Iz grafa je razvidno, da imata krivulji od leta 2005 dalje podobno obliko, torej na istih intervalih naraščata/padata. Sklepali bi lahko, da sta ti dve spremenljivki premo sorazmerni (če oapzujemo od leta 2005 dalje). Kar pa je drugačen rezultat, kot bi ga pričakovali, saj bi načeloma moralo držati pravilo, da večja kot je ponudba, manjša je cena. Zanimivo je tudi, da padec iz leta 2005 ni nič vplival na ceno jajc.
+Iz grafa je razvidno, da imata krivulji od leta 2005 dalje podobno obliko, torej na istih intervalih naraščata/padata. Sklepali bi lahko, da sta ti dve spremenljivki premo sorazmerni (če opazujemo od leta 2005 dalje). Kar pa je drugačen rezultat, kot bi ga pričakovali, saj bi načeloma moralo držati pravilo, da večja kot je ponudba, manjša je cena. Zanimivo je tudi, da padec iz leta 2005 ni nič vplival na ceno jajc.
 
 &nbsp;
 &nbsp;
@@ -225,22 +225,28 @@ Iz grafa je razvidno, da imata krivulji od leta 2005 dalje podobno obliko, torej
 
 # Naprednejša analiza
 
-```{r analiza, echo=FALSE, message=FALSE, fig.align='center'}
+```{r analiza, echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 source("analiza/analiza.r", encoding="UTF-8")
 ```
 
 Za konec sem v aplikaciji Shiny narisala dva grafa. Prvi predstavlja stolpični graf, ki prikazuje gibanje kemtijskih gospodarstev z običajnim kmetovanjem in ekološkim kmetovanjem. Spremenljivka "kmetijska gospodarstva" predstavlja razliko med vsemi kmetijskimi gospodarstvi v Sloveniji in tistimi z ekološko usmerjenostjo. \
-Drugi graf pa prikazuje delež organičnega kmetijstva na območjih sveta, Afrike, Amerike, Azije, Evrope in Oceanije v %. \
+Drugi graf pa prikazuje delež organičnega kmetijstva na različnih območjih sveta v %. \
 V oba grafa sem vključila tudi napoved, ki sem jo izračunala s pomočjo linearne regresije. \
-Iz stolpičnega grafa opazimo, da je z leti vedno več kmetijskih gospodarstev z ekološkim kmetovanjem in vedno manj z običajnim. To je verjetno posledica raziskav, ki prikazujejo, da neekološka pridelava rastlin in živali vpliva na zdravje človeka. Nastal je tudi globalni trend. \
-Zgornjo trditev definitivno potrjuje drugi graf, saj ekološka kmetijstva strmo naraščajo na vseh območjih sveta.
 
 ```{r shiny, echo = FALSE}
-shinyAppDir("shiny", options=list(width="100%", height=1300))
+shinyAppDir("shiny", options=list(width="100%", height=830))
 ```
+
+Iz stolpičnega grafa opazimo, da je z leti vedno več kmetijskih gospodarstev z ekološkim kmetovanjem in vedno manj z običajnim. To je verjetno posledica raziskav, ki prikazujejo, da neekološka pridelava rastlin in živali vpliva na zdravje človeka. Nastal je tudi globalni trend. \
+Zgornjo trditev definitivno potrjuje tudi drugi graf, saj ekološka kmetijstva naraščajo na vseh območjih sveta.
 
 &nbsp;
 &nbsp;
 
 ***
 
+# Zaključek
+
+Ugotovila sem, da je vedno več kmetij z ekološko usmerjenim gospodarstvom, kar je bila tudi moja predikcija na začetku. Ugotovitev mi je všeč, saj to pomeni, da so ljudje po celem svetu vedno bolj ozaveščeni o zdravi prehrani in onesnaževanju našega planeta, saj so ekološko pridelana živila bolj prijazna okolju.
+
+***
