@@ -12,7 +12,7 @@ function(input, output) {
   })
 
   output$graf2 <- renderPlot({
-    graf.organic <- ggplot(Tabela_svet %>% filter(Area == input$Area)) + 
+    graf.organic <- ggplot(Tabela_svet_napoved %>% filter(Area == input$Area)) + 
       aes(x = Year, y = Value) + geom_line(size=1.5, color='red') +
       labs(title = "Delež organičnega kmetijstva na posameznem območju v %") + theme(plot.title = element_text(hjust = 0.5)) +
       ylab("Delež") + xlab("Leto")
