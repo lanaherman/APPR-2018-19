@@ -27,8 +27,6 @@ Tabela_svet$Area[Tabela_svet$Area == "Asia"] <- "Azija"
 Tabela_svet$Area[Tabela_svet$Area == "Europe"] <- "Evropa"
 Tabela_svet$Area[Tabela_svet$Area == "Oceania"] <- "Oceanija"
 
-#value prikazuje kolikšen delež posameznega območja predstavljajo organični pridelki
-
 Tabela1 <- read_delim("podatki/Kmetijska gospodarstva.csv", delim=";",
                       na=c("", " ", "...", "-"),
                       locale=locale(encoding="Windows-1250", decimal_mark="."))
