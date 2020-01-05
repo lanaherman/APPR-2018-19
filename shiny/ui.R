@@ -11,6 +11,6 @@ fluidPage(
   tabPanel("Graf",
            sidebarPanel(
              selectInput("Area", label = "Izberi območje", 
-                         choices = unique(Tabela_svet$Area))),
+                         choices = unique(Tabela_svet_napoved$Area))),
            mainPanel(plotOutput("graf2")))
 )
