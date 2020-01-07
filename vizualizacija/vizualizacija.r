@@ -119,7 +119,7 @@ tortni_ne_eko_ziv <- br + coord_fixed() +
 tortni_ne_eko_ziv
 ############################################################################################
 
-############################# KORELACIJA KOKOŠI-CENA JAJC ######################################
+############################# KORELACIJA KOKOŠI-CENA JAJC #####################################
 cene_jajca <- Tabela7[Tabela7$Izdelek %in% "Jajca, konzumna", ]
 colnames(cene_jajca) = c("izdelek", "leto", "stevilo")
 cene_jajca$stevilo <- as.numeric(cene_jajca$stevilo)
