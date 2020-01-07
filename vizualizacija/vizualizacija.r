@@ -2,59 +2,22 @@
 ########################## ZEMLJEVID ############################################################
 sl <- locale("sl", decimal_mark=",", grouping_mark=".")
 
-uvozi.obcine <- function() {
-  link <- "http://sl.wikipedia.org/wiki/Seznam_ob%C4%8Din_v_Sloveniji"
-  stran <- html_session(link) %>% read_html()
-  tabela <- stran %>% html_nodes(xpath="//table[@class='wikitable sortable']") %>%
-    .[[1]] %>% html_table(dec=",")
-  for (i in 1:ncol(tabela)) {
-    if (is.character(tabela[[i]])) {
-      Encoding(tabela[[i]]) <- "UTF-8"
-    }
-  }
-  colnames(tabela) <- c("obcina", "povrsina", "prebivalci", "gostota", "naselja",
-                        "ustanovitev", "pokrajina", "regija", "odcepitev")
-  tabela$obcina <- gsub("Slovenskih", "Slov.", tabela$obcina)
-  tabela$obcina[tabela$obcina == "Kanal ob Soči"] <- "Kanal"
-  tabela$obcina[tabela$obcina == "Loški potok"] <- "Loški Potok"
-  tabela$regija[tabela$regija == "Spodnjeposavska"] <- "Posavska"
-  tabela$regija[tabela$regija == "Notranjsko-kraška"] <- "Primorsko-notranjska"
-  tabela$regija[tabela$regija == "Jugovzhodna"] <- "Jugovzhodna Slovenija"
-  for (col in c("obcina", "pokrajina", "regija")) {
-    tabela[[col]] <- factor(tabela[[col]])
-  }
-  return(tabela)
-}
-
-obcine <- uvozi.obcine()
-
 b <- Tabela6[Tabela6$leto==2010, ]
-colnames(b) <- c("regija", "leto", "stevilo")
+colnames(b) <- c("NAME_1", "leto", "stevilo")
+b$NAME_1[b$NAME_1 == "Posavska"] <- "Spodnjeposavska"
+b$NAME_1[b$NAME_1 == "Primorsko-notranjska"] <- "Notranjsko-kraška"
 
-total <- merge(b, obcine,by=c("regija")) #Dobiš imena običn pod imenom regij
-total$"obcina" <- toupper(total$"obcina")
-names(total)[names(total) == "obcina"] <- "OB_IME"
+zemljevid <- uvozi.zemljevid(url = "https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_SVN_shp.zip",
+                             ime.zemljevida = "gadm36_SVN_1",
+                             encoding="UTF-8") %>% fortify()
+zemljevid$NAME_1 <- as.character(zemljevid$NAME_1)
 
-zemljevid <- uvozi.zemljevid("http://baza.fmf.uni-lj.si/OB.zip", ime.zemljevida = "OB",
-                            pot.zemljevida="OB", encoding="Windows-1250") %>% fortify()
+total1 <- merge(b, zemljevid, by=c("NAME_1"))
 
-# zemljevid <- uvozi.zemljevid(url = "https://biogeo.ucdavis.edu/data/gadm3.6/shp/gadm36_SVN_shp.zip",
-#                              #ime.zemljevida = "gadm36_SVN_1",
-#                              "gadm36_SVN_1",
-#                              encoding="UTF-8") %>% fortify()
-
-
-total$OB_IME <- gsub(" ", "", total$"OB_IME", fixed = TRUE)
-zemljevid$OB_IME <- gsub(" ", "", zemljevid$"OB_IME", fixed = TRUE)
-zemljevid$OB_IME[zemljevid$OB_IME == "SVETIANDRAŽVSLOV.GORICAH"] <- "SV.TROJICAVSLOV.GORICAH"
-zemljevid$OB_IME[zemljevid$OB_IME == "SVETIJURIJVSLOV.GORICAH"] <- "SV.TROJICAVSLOV.GORICAH"
-
-data <- merge(total, zemljevid,by=c("OB_IME")) #Dobiš koordinate od vseh obćin ter podatke za mapo
-names(data)[names(data) == "stevilo"] <- "stevilo kmetijskih gospodarstev"
-
-zemljevid_slovenije <- ggplot() + geom_polygon(data=left_join(zemljevid, total, by=c("OB_IME"="OB_IME")),
-                                               aes(x=long, y=lat, group=group, fill=stevilo))
-zemljevid_slovenije <- zemljevid_slovenije + labs(fill = "Število kmetijskih gospodarstev v letu 2010")
+zemljevid_slovenije <- ggplot() + geom_polygon(data=left_join(zemljevid, total1, by=c("NAME_1"="NAME_1")),
+                                               aes(x=long.x, y=lat.x, group=group.x, fill=stevilo))
+zemljevid_slovenije <- zemljevid_slovenije + labs(fill = "Število kmetijskih gospodarstev v letu 2010") +
+  xlab("") + ylab("")
 zemljevid_slovenije
 ###############################################################################################
 
